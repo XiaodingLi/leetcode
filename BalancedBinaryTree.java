@@ -12,7 +12,7 @@ public class BalancedBinaryTree {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("Frist try");
 
 	}
 	public boolean isBalanced(TreeNode root){
