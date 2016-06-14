@@ -1,0 +1,112 @@
+class MyEntry<K, V> implements Map.Entry<K, V> {
+    private final K key;
+    private V value;
+
+    public MyEntry(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    @Override
+    public K getKey() {
+        return key;
+    }
+
+    @Override
+    public V getValue() {
+        return value;
+    }
+
+    @Override
+    public V setValue(V value) {
+        V old = this.value;
+        this.value = value;
+        return old;
+    }
+}
+public class Twitter {
+    Map<Integer, List<Integer>> tws;
+    Map<Integer, Set<Integer>>  followShip;
+    /** Initialize your data structure here. */
+    public Twitter() {
+        tws = new HashMap<>();
+        followShip= new HashMap<>();
+    }
+    
+    /** Compose a new tweet. */
+    public void postTweet(int userId, int tweetId) {
+        List<Integer> meg = tws.getOrDefault(userId, new ArrayList<>());
+        meg.add(tweetId);
+        tws.put(userId, meg );
+    }
+    public List<Integer> getNewsFeed(int userId) {
+    	//1 get all the followeew
+    
+        Set<Integer> fees = followShip.getOrDefault(userId, new HashSet<>());
+        
+        fees.add(userId);//add self to the fees list
+        
+    	//2 get message from each followee, put message to the stack for each followee
+        Map<Integer, Stack<Map.Entry<Integer, Integer>>> allMegs = new HashMap<>();//Entry : Map <uid , Stack< Entry<uid , mid>>>
+         
+        for (int uid : fees){
+        	List<Integer> eemgF = tws.get(uid);
+        	 
+        	Stack<Map.Entry<Integer, Integer>> eemgT = new Stack<>();
+        	
+        	for (int i = eemgF.size() - 1; i >= 0 && eemgT.size() < 10; i--){
+        		eemgT.push(new MyEntry<Integer, Integer>(uid, eemgF.get(i)));
+        	}
+        	allMegs.put(uid, eemgT);
+        }
+        
+        //3 put all these message together and get top10 of them
+        Queue<Map.Entry<Integer, Integer>> heap = new PriorityQueue<>(10, new Comparator<Map.Entry<Integer, Integer>>(){
+        	public int compare(Map.Entry<Integer, Integer> a, Map.Entry<Integer, Integer> b){
+        		return b.getValue() - a.getValue();
+        	}
+        });
+        
+        for ( Map.Entry<Integer, Stack<Map.Entry<Integer, Integer>>> ee : allMegs.entrySet()){
+        	heap.offer(ee.getValue().pop());
+        }
+        
+        //3.2 get top 10 of message
+        List<Integer> rst = new ArrayList<>();
+        int count = 0 ;
+        while(count < 10 && !heap.isEmpty()){
+        	count++;
+        	Map.Entry<Integer, Integer> ent = heap.poll();
+        	
+        	rst.add(ent.getValue());
+        	int uid = ent.getKey();
+        	
+        	if (!allMegs.get(uid).isEmpty()){
+        		heap.offer( new MyEntry<Integer, Integer>( uid, allMegs.get(uid).pop().getValue() ));
+        	}
+        }
+        
+        return rst;
+    }
+    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    public void follow(int followerId, int followeeId) {
+        Set<Integer> followees = followShip.getOrDefault(followerId, new HashSet<>());
+        followees.add(followeeId);
+        followShip.put(followerId, followees );
+    }
+    
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    public void unfollow(int followerId, int followeeId) {
+        followShip.get(followerId).remove(followeeId);
+    }
+}
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter obj = new Twitter();
+ * obj.postTweet(userId,tweetId);
+ * List<Integer> param_2 = obj.getNewsFeed(userId);
+ * obj.follow(followerId,followeeId);
+ * obj.unfollow(followerId,followeeId);
+ */
