@@ -1,0 +1,25 @@
+public int coinChange(int[] coins, int amount) {
+		if (amount < 1)
+			return 0;
+		return dfs(coins, amount, new int[amount + 1]);
+	}
+
+	private int dfs(int[] coins, int rem, int[] count) {
+		// rem: remaining coins after the last step; count[rem]: minimum number  of coins to sum up to rem
+		if (rem < 0)
+			return -1; // not valid
+		if (rem == 0)
+			return 0; // completed
+		if (count[rem] != 0)
+			return count[rem]; // already computed, so reuse
+		int min = Integer.MAX_VALUE;
+		for (int coin : coins) {
+			int res = dfs(coins, rem - coin, count);
+			 //if(res>=0 && min > res + 1) min = res + 1;
+			if (res >= 0) {
+				min = Math.min(min, res + 1);
+			}
+		}
+		count[rem] = (min == Integer.MAX_VALUE) ? -1 : min;
+		return count[rem];
+	}
