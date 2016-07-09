@@ -1,0 +1,33 @@
+public class Solution {
+    public List<String> addOperators(String num, int target) {
+        List<String> rst = new ArrayList<>();
+        if (num == null || num.length() == 0){
+            return rst;
+        }
+        dfs(rst, "", num, target, 0, 0, 0);
+        return rst;
+    }
+    void dfs(List<String> rst, String item, String input, int target, int index, long val, long m){
+        if (index == input.length()){
+            if (val == target){
+                rst.add(item);
+                return;
+            }
+        }
+        for (int i = index; i < input.length(); i++){
+            if (i != index && input.charAt(index)== '0'){
+                break;
+            }
+            long cur = Long.parseLong(input.substring(index, i + 1));
+            
+            if (index == 0){
+                dfs (rst, item + cur, input, target, i + 1, cur, cur);
+            } else {
+                
+            dfs (rst, item + "+" + cur, input, target, i + 1, val + cur, cur);
+            dfs (rst, item + "-" + cur, input, target, i + 1, val - cur, -cur);
+            dfs (rst, item + "*" + cur, input, target, i + 1, val - m + m * cur, m * cur);
+            }
+        }
+    }
+}
