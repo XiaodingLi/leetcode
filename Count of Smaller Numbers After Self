@@ -1,0 +1,40 @@
+public class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        List<Integer> sorted = new ArrayList<>();
+        if (nums == null || nums.length == 0){
+            return sorted;
+        }
+        
+        int len = nums.length;
+        Integer[] rst = new Integer[len];
+        for (int i = len - 1; i >= 0; i--){
+            int index = findInsertP(sorted, nums[i]);
+            sorted.add(index, nums[i]);
+            rst[i] = index;
+        }
+        return Arrays.asList(rst);
+    }
+    private int findInsertP(List<Integer> list, int target){//binary search get the first index >= target
+	        if (list == null || list.size() == 0){
+	            return 0;
+	        }
+	        int start = 0;
+	        int end = list.size() - 1;
+	        while (start + 1 < end){
+	            int mid = start + (end - start)/ 2;
+	            if (list.get(mid) < target){
+	                start = mid;
+	            } else {
+	            	end = mid;
+	            }
+	        }
+	        if (list.get(start) >= target){
+	            return start;
+	        } if (list.get(end) >= target){
+	            return end;
+	        } else {
+	            return list.size();
+	        }
+	       
+	    }
+}
