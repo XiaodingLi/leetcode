@@ -1,0 +1,35 @@
+public class Solution {
+    class Pair{
+	int s;
+	int e;
+	public Pair(int s, int e){
+		this.s = s;
+		this.e  = e;
+	}
+}
+    public List<int[]> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+		
+		Queue<Pair> q = new PriorityQueue(k, new Comparator<Pair>(){
+			public int compare(Pair a, Pair b){
+				return (a.e+ a.s) - (b.s+ b.e);
+			}
+		});
+		
+		for (int i = 0; i < nums1.length; i++){
+			for (int j = 0; j < nums2.length; j++){
+				q.offer(new Pair(nums1[i] , nums2[j]));
+			}
+		}
+		
+		List<int[]> rst = new ArrayList<>();
+		while(!q.isEmpty() && k > 0){
+			int[] arr = new int[2];
+			Pair temp = q.poll();
+			arr[0] = temp.s;
+			arr[1] = temp.e;
+			rst.add(arr);
+			k--;
+		}
+		return rst;
+	}
+}
