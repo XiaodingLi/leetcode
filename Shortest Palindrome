@@ -1,0 +1,20 @@
+public class Solution {
+    public String shortestPalindrome(String s) {
+        
+         int l = 0;
+        for (int r = s.length() - 1; r >= 0; r--){// must be r >= 0 not r >= l
+            if (s.charAt(l) == s.charAt(r)){
+                l++;
+            } 
+        }
+        if (l == s.length()){
+            return s;
+        }
+        String suffix = s.substring(l);
+        
+        String mid = shortestPalindrome(s.substring(0, l));
+        
+        return new StringBuilder(suffix).reverse().toString() + mid + suffix;
+    
+    }
+}
