@@ -1,0 +1,26 @@
+public class Solution {
+    public List<String> findRepeatedDnaSequences(String s) {
+        // too much memory space needed
+		List<String> res = new ArrayList<String>();
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		for (int i = 0; i < s.length() - 9; i++) {
+			String temp = s.substring(i, i + 10);
+			if (!map.containsKey(temp)) {
+				map.put(temp, 1);
+			} else {
+				map.put(temp, map.get(temp) + 1);
+			}
+		}
+		
+		Iterator<String> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			String temp = it.next();
+			int c = map.get(temp);
+			if (c > 1) {
+				res.add(temp);
+			}
+		}
+		return res;
+	
+    }
+}
